@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gus Payment Processor Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Gus Payment Processor Dashboard</h1>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="card">
+      <h2>Create Gus Price Key</h2>
+      <p>Use GPKs with the SDK to associate a subscription with the product.</p>
+      <br>
+      <form id="priceKeyForm">
+        <div class="form-group">
+          <label for="humanFriendlyId">Human-Friendly ID:</label>
+          <input type="text" id="humanFriendlyId" name="humanFriendlyId" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="stripePriceId">Stripe Price ID:</label>
+          <input type="text" id="stripePriceId" name="stripePriceId" required>
+        </div>
+
+        <div class="form-group">
+          <label for="isSubscription">Is Subscription:</label>
+          <input type="checkbox" id="isSubscription" name="isSubscription">
+        </div>
+        
+        <button type="submit">Create</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Existing Price Keys</h2>
+      <ul id="priceKeysList" class="price-keys-list"></ul>
+    </div>
+
+    <div id="notification" class="notification" style="display: none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('priceKeyForm');
+    const priceKeysList = document.getElementById('priceKeysList');
+    const notification = document.getElementById('notification');
+
+    function showNotification(message, type) {
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.style.display = 'block';
+      
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 4000);
+    }
+
+    async function defaultFormHandler(e) {
+      e.preventDefault();
+      const humanFriendlyId = document.getElementById('humanFriendlyId').value;
+      const stripePriceId = document.getElementById('stripePriceId').value;
+      const isSubscription = document.getElementById('isSubscription').checked;
+
+      try {
+        const response = await fetch('/price-keys', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ humanFriendlyId, stripePriceId, isSubscription }),
+        });
+
+        if (response.ok) {
+          showNotification('Price key created successfully', 'success');
+          form.reset();
+          loadPriceKeys();
+        } else {
+          const error = await response.json();
+          showNotification(error.message || 'Failed to create price key', 'error');
+        }
+      } catch (error) {
+        showNotification('An error occurred while creating the price key', 'error');
+      }
+    }
+
+    form.onsubmit = defaultFormHandler;
+
+    async function deleteKey(humanFriendlyId) {
+      try {
+        const response = await fetch(`/price-keys/${humanFriendlyId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          showNotification('Price key deleted successfully', 'success');
+          loadPriceKeys();
+        } else {
+          const error = await response.json();
+          showNotification(error.message || 'Failed to delete price key', 'error');
+        }
+      } catch (error) {
+        showNotification('An error occurred while deleting the price key', 'error');
+      }
+    }
+
+    async function loadPriceKeys() {
+      try {
+        const response = await fetch('/price-keys');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch price keys');
+        }
+        
+        const priceKeys = await response.json();
+
+        priceKeysList.innerHTML = '';
+        
+        if (Object.keys(priceKeys).length === 0) {
+          const emptyMessage = document.createElement('p');
+          emptyMessage.textContent = 'No price keys found. Create one to get started.';
+          emptyMessage.style.textAlign = 'center';
+          emptyMessage.style.color = '#6b7280';
+          emptyMessage.style.padding = '20px 0';
+          priceKeysList.appendChild(emptyMessage);
+          return;
+        }
+        
+        for (const [humanFriendlyId, { stripePriceId, isSubscription }] of Object.entries(priceKeys)) {
+          const li = document.createElement('li');
+          li.className = 'price-key-item';
+          
+          li.innerHTML = `
+            <div class="price-key-text">
+              <span class="key-label">${humanFriendlyId}:</span>
+              <span class="key-value">${stripePriceId} (${isSubscription ? 'Subscription' : 'One-Time'})</span>
+            </div>
+            <button type="button" class="edit-btn" data-id="${humanFriendlyId}">Edit</button>
+            <button type="button" class="delete-btn" data-id="${humanFriendlyId}">Delete</button>
+          `;
+          
+          priceKeysList.appendChild(li);
+        }
+        
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('data-id');
+            if (confirm(`Are you sure you want to delete the price key "${id}"?`)) {
+              deleteKey(id);
+            }
+          });
+        });
+
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('data-id');
+            editKey(id);
+          });
+        });
+        
+      } catch (error) {
+        showNotification('Failed to load price keys', 'error');
+        console.error('Error loading price keys:', error);
+      }
+    }
+
+    async function editKey(humanFriendlyId) {
+      try {
+        const response = await fetch(`/price-keys/${humanFriendlyId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch price key details');
+        }
+
+        const { stripePriceId, isSubscription } = await response.json();
+
+        document.getElementById('humanFriendlyId').value = humanFriendlyId;
+        document.getElementById('stripePriceId').value = stripePriceId;
+        document.getElementById('isSubscription').checked = isSubscription;
+
+        document.getElementById('priceKeyForm').scrollIntoView({ behavior: 'smooth' });
+
+        form.onsubmit = async (e) => {
+          e.preventDefault();
+
+          const updatedStripePriceId = document.getElementById('stripePriceId').value;
+          const updatedIsSubscription = document.getElementById('isSubscription').checked;
+
+          try {
+            const updateResponse = await fetch(`/price-keys/${humanFriendlyId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ stripePriceId: updatedStripePriceId, isSubscription: updatedIsSubscription }),
+            });
+
+            if (updateResponse.ok) {
+              showNotification('Price key updated successfully', 'success');
+              form.reset();
+              form.onsubmit = defaultFormHandler;
+              loadPriceKeys();
+            } else {
+              const error = await updateResponse.json();
+              showNotification(error.message || 'Failed to update price key', 'error');
+            }
+          } catch (error) {
+            showNotification('An error occurred while updating the price key', 'error');
+          }
+        };
+      } catch (error) {
+        showNotification('Failed to load price key details for editing', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadPriceKeys);
+  </script>
+</body>
+</html>

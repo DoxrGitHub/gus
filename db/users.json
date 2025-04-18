@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "email": "csmitefire@gmail.com",
+      "password": "86bb8742f485bd2a48e47a63f604cabe317edf5faa212fbddc24619ea8d7c93f",
+      "token": "0716f419b6f5e44ea4548fc14a88312f"
+    },
+    {
+      "email": "gusman@100.com",
+      "password": "00a446d1696df42fc343e2dcf881c6ca4c4039c7138f4adb6c8a7498c9cfa54f",
+      "token": "28f9739389635a6190d95cbec120826a"
+    }
+  ]
+}

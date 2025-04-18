@@ -1,0 +1,13 @@
+{
+  "payers": [
+    {
+      "customer": {
+        "email": "csmitefire@gmail.com",
+        "name": "7868",
+        "id": "cus_S9TEl9aOsitvhH"
+      },
+      "priceId": "price_1RF4Wu05q324AqbasKU34W7s",
+      "licenseExpires": "2025-05-18T08:28:44.685Z"
+    }
+  ]
+}

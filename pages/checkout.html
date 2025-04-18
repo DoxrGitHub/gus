@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Checkout | Gus Payment Processor</title>
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+  <div class="checkout-container">
+    <div class="checkout-card">
+      <div class="checkout-header">
+        <h1>Manual Checkout</h1>
+        <p>Complete your purchase securely- all you need is the Gus Price Key.</p>
+      </div>
+      
+      <div class="checkout-body">
+        <form id="checkoutForm">
+          <div class="form-group">
+            <label for="humanFriendlyId">Enter Gus Price Key:</label>
+            <input 
+              type="text" 
+              id="humanFriendlyId" 
+              name="humanFriendlyId" 
+              required 
+              placeholder="e.g., pushmark"
+              autocomplete="off"
+            >
+          </div>
+          
+          <button type="submit" class="btn-checkout">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Start Checkout
+          </button>
+        </form>
+        
+        <div class="secure-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Secured by Stripe
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="notification" class="notification" style="display: none;"></div>
+
+  <script>
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      try {
+        const response = await fetch('/start-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(formData)),
+        });
+        
+        const result = await response.json();
+        
+        if (result.url) {
+          window.location.href = result.url; // Redirect to Stripe Checkout
+        } else {
+          // Show error message
+          showNotification(result.message || 'Failed to start checkout', 'error');
+        }
+      } catch (error) {
+        showNotification('An error occurred. Please try again.', 'error');
+      }
+    });
+    
+    function showNotification(message, type) {
+      // Check if notification div exists, if not create it
+      let notification = document.querySelector('.notification');
+      if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'notification';
+        document.body.appendChild(notification);
+      }
+      
+      // Set message and type
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      
+      // Show notification
+      notification.style.display = 'block';
+      
+      // Hide after 4 seconds
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

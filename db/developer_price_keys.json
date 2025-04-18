@@ -1,0 +1,12 @@
+{
+  "priceKeys": {
+    "100": {
+      "stripePriceId": "price_1RF9xb05q324AqbacD25Spr1",
+      "isSubscription": false
+    },
+    "starter": {
+      "stripePriceId": "price_1RF4Wu05q324AqbasKU34W7s",
+      "isSubscription": true
+    }
+  }
+}
