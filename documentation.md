@@ -30,6 +30,17 @@ To start the Gus server, run
 
 Note that you will need to configure a reverse proxy system to enable HTTPS, link to a domain (for Stripe), etc.
 
+## Payment Flow
+You will want to read this to know how Gus should be used. 
+
+1. User inputs their email, stored client-side*. This is how the payer record is associated.
+2. The SDK queries the Gus API using the human-readable ID and email.
+3. If a payer record is found and the license is still valid (SDK checks this), the user has a valid license (sounds redundant, but this means that they should now recieve premium features).
+4. If no record is found or the license is expired, the user should prompted to pay or handled as a free user
+5. During checkout, the SDK redirects the user to the Stripe checkout page.
+6. While the user completes payment, the SDK periodically checks for an active payer record to enable access as soon as possible.
+7. Upon successful payment, the user is redirected to a success page (static), so they should return to the extension.
+8. The SDK/extension can now access user data such as email, license expiration, and payment status.
 
 ## Using the SDK
 
