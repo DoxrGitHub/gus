@@ -1,6 +1,7 @@
 require('dotenv').config();
-const express = require('express');
+const fs = require('fs');
 const path = require('path');
+const express = require('express');
 const Stripe = require('stripe');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -12,9 +13,29 @@ const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const PORT = process.env.PORT || 3000;
 
+const dbDir = path.join(__dirname, 'db');
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir);
+}
+
+const usersPath = path.join(dbDir, 'users.json');
+const payersPath = path.join(dbDir, 'payers.json');
+const priceKeysPath = path.join(dbDir, 'developer_price_keys.json');
+
+if (!fs.existsSync(priceKeysPath)) {
+    fs.writeFileSync(priceKeysPath, JSON.stringify({"priceKeys": {}}));
+}
+if (!fs.existsSync(payersPath)) {
+    fs.writeFileSync(payersPath, JSON.stringify({"payers": []}));
+}
+if (!fs.existsSync(usersPath)) {
+    fs.writeFileSync(usersPath, JSON.stringify({"users": []}));
+}
+
 const usersDB = new Client('./db/users.json');
 const priceKeysDB = new Client('./db/developer_price_keys.json');
 const payersDB = new Client('./db/payers.json');
+
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const loginLimiter = rateLimit({

@@ -13,10 +13,10 @@
         <h1>Automatic Checkout</h1>
         <p>Completing your purchase securely using the Gus Price Key.</p>
       </div>
-      
+
       <div class="checkout-body">
         <div class="loading-message">Processing your checkout...</div>
-        
+
         <div class="secure-badge">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -26,26 +26,24 @@
       </div>
     </div>
   </div>
-  
+
   <div id="notification" class="notification" style="display: none;"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Function to get the value of a URL parameter
+
       function getUrlParam(name) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
       }
 
-      // Get Gus Price Key from the URL
       const gusPriceKey = getUrlParam('guspricekey');
 
-      // Check if Gus Price Key exists in the URL
       if (gusPriceKey) {
-        // Proceed with the checkout process
+
         startCheckout(gusPriceKey);
       } else {
-        // Show error if no Gus Price Key is provided
+
         showNotification('No Gus Price Key provided in the URL.', 'error');
       }
     });
@@ -61,9 +59,9 @@
         const result = await response.json();
 
         if (result.url) {
-          window.location.href = result.url; // Redirect to Stripe Checkout
+          window.location.href = result.url; 
         } else {
-          // Show error message if the checkout process fails
+
           showNotification(result.message || 'Failed to start checkout', 'error');
         }
       } catch (error) {

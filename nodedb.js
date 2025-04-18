@@ -71,7 +71,6 @@ export class Client {
     }
   }
 
-  // New method to list all keys
   async list(prefix = '') {
     try {
       const data = await fs.readFile(this.dbPath, "utf8");
@@ -81,7 +80,6 @@ export class Client {
       const json = JSON.parse(data);
       let keys = Object.keys(json);
 
-      // Filter keys based on the prefix if provided
       if (prefix!== '') {
         keys = keys.filter(key => key.startsWith(prefix));
       }

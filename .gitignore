@@ -1,6 +1,11 @@
 # dependencies (bun install)
 node_modules
 
+# db
+db/payers.json
+db/developer_price_keys.json
+db/users.json
+
 # output
 out
 dist

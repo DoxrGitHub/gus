@@ -1,194 +1,192 @@
-/* checkout.css */
 :root {
-    --primary: #4f46e5;
-    --primary-dark: #4338ca;
-    --secondary: #10b981;
-    --dark: #1f2937;
-    --light: #f9fafb;
-    --gray: #e5e7eb;
-    --danger: #ef4444;
-    --success: #10b981;
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --secondary: #10b981;
+  --dark: #1f2937;
+  --light: #f9fafb;
+  --gray: #e5e7eb;
+  --danger: #ef4444;
+  --success: #10b981;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #f3f4f6;
+  color: var(--dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.checkout-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.checkout-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.checkout-header {
+  padding: 25px;
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+}
+
+.checkout-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.checkout-header p {
+  opacity: 0.9;
+  font-size: 16px;
+}
+
+.checkout-body {
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: var(--dark);
+  font-size: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--gray);
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+.btn-checkout {
+  width: 100%;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-checkout:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-checkout:active {
+  transform: translateY(0);
+}
+
+.btn-checkout svg {
+  width: 20px;
+  height: 20px;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.3s ease, fadeOut 0.3s ease 3.7s forwards;
+  display: none;
+}
+
+.notification.error {
+  background-color: #fee2e2;
+  color: var(--danger);
+  border-left: 4px solid var(--danger);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+.secure-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: #6b7280;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.secure-badge svg {
+  width: 16px;
+  height: 16px;
+  color: var(--secondary);
+}
+
+@media (max-width: 520px) {
+  .checkout-container {
+    width: 95%;
   }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: var(--font-main);
-    background-color: #f3f4f6;
-    color: var(--dark);
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+  .checkout-header {
     padding: 20px;
   }
-  
-  .checkout-container {
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  .checkout-card {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  
-  .checkout-header {
-    padding: 25px;
-    background-color: var(--primary);
-    color: white;
-    text-align: center;
-  }
-  
-  .checkout-header h1 {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  
-  .checkout-header p {
-    opacity: 0.9;
-    font-size: 16px;
-  }
-  
+
   .checkout-body {
-    padding: 30px;
+    padding: 20px;
   }
-  
-  .form-group {
-    margin-bottom: 25px;
-  }
-  
-  label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 10px;
-    color: var(--dark);
-    font-size: 16px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 14px 18px;
-    border: 2px solid var(--gray);
-    border-radius: 8px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-  }
-  
-  input::placeholder {
-    color: #9ca3af;
-  }
-  
+
   .btn-checkout {
-    width: 100%;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 16px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+    padding: 14px 18px;
+    font-size: 16px;
   }
-  
-  .btn-checkout:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-  }
-  
-  .btn-checkout:active {
-    transform: translateY(0);
-  }
-  
-  .btn-checkout svg {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 1000;
-    box-shadow: var(--shadow);
-    animation: fadeIn 0.3s ease, fadeOut 0.3s ease 3.7s forwards;
-    display: none;
-  }
-  
-  .notification.error {
-    background-color: #fee2e2;
-    color: var(--danger);
-    border-left: 4px solid var(--danger);
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  @keyframes fadeOut {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(-10px); }
-  }
-  
-  .secure-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-    color: #6b7280;
-    font-size: 14px;
-    gap: 8px;
-  }
-  
-  .secure-badge svg {
-    width: 16px;
-    height: 16px;
-    color: var(--secondary);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 520px) {
-    .checkout-container {
-      width: 95%;
-    }
-    
-    .checkout-header {
-      padding: 20px;
-    }
-    
-    .checkout-body {
-      padding: 20px;
-    }
-    
-    .btn-checkout {
-      padding: 14px 18px;
-      font-size: 16px;
-    }
-  }
+}

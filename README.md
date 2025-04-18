@@ -29,3 +29,8 @@ Gus is a solution to monetizing Chrome extensions, while allowing the developer 
 See [documentation](./documentation.md)
 
 You can find the Gus SDK [here](./sdk/gus-sdk.js).
+
+## Credit
+
+- Doxr - [Gus](https://github.com/DoxrGitHub/gus)
+- Doxr - [nodeDB](https://github.com/DoxrGitHub/nodeDB)
